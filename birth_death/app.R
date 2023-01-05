@@ -25,19 +25,20 @@ ui <- fluidPage(
                  
                  sliderInput("exp_death_rate", "Death rate:",
                              min = 0, max = 10,
-                             value = 2.3, step = 0.1),
+                             value = 1, step = 0.1),
                  sliderInput("exp_pop_init_size", "Initial population size:",
                              min = 2, max = 1000,
                              value = 100, step = 1),
                  
                  sliderInput("exp_gen_num", "Number of generations:",
-                             min = 2, max = 1000,
-                             value = 100, step = 1),
+                             min = 2, max = 200,
+                             value = 20, step = 1),
                  
-                 actionButton("sim_run", "Run simulation")
+                 actionButton("sim_run_exp", "Run simulation")
                ),
                mainPanel(
-                 plotOutput("exp_plot")
+                 plotOutput("exp_plot"),
+                 dataTableOutput("exp_table")
                )
                
                
@@ -57,18 +58,20 @@ server <- function(input, output){
   sim_data <- reactiveValues(data=NULL)
   
   
-  observeEvent(input$sim_run, {
-    sim_data$data <- data.frame(generation = 0:(input$exp_gen_num-1), 
+  observeEvent(input$sim_run_exp, {
+    sim_data$data <- data.frame(generation = 0:(input$exp_gen_num), 
                                 population_size = 
                                   c(input$exp_pop_init_size,rep(NA, 
-                                                                input$exp_gen_num-1)),
+                                                                input$exp_gen_num)),
                                 new_births = NA,
                                 new_deaths = NA)
     
     for(gen_index in 2:nrow(sim_data$data)){
       
-      sim_data$data[gen_index,"new_births"] <- round(sim_data$data[gen_index-1,"population_size"] * input$exp_birth_rate)
-      sim_data$data[gen_index,"new_deaths"] <- round(sim_data$data[gen_index-1,"population_size"] * input$exp_death_rate)
+      sim_data$data[gen_index,"new_births"] <- 
+        round(sim_data$data[gen_index-1,"population_size"] * input$exp_birth_rate)
+      sim_data$data[gen_index,"new_deaths"] <- 
+        round(sim_data$data[gen_index-1,"population_size"] * input$exp_death_rate)
       
       new_pop_size <-  sim_data$data[gen_index-1,"population_size"] + 
         sim_data$data[gen_index,"new_births"]  - sim_data$data[gen_index,"new_deaths"]
@@ -85,10 +88,18 @@ server <- function(input, output){
     
     if (is.null(sim_data$data)) return()
     
-    plot(x=sim_data$data$generation,y=sim_data$data$population_size)
+    plot(x=sim_data$data$generation,
+         y=sim_data$data$population_size,
+         type="b",
+         xlab="Generation number",
+         ylab="Population size")
     
     
   })
+  
+  output$exp_table <- renderDataTable(sim_data$data,
+                                      options = list(pageLength = 10,
+                                                     searching = FALSE))
 
 }
 
