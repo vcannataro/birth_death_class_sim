@@ -1,10 +1,14 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
+#'
+#' Building a discrete time birth-death model for a first-year intro biology class. 
+#' The idea is that students can step through parameter changes and "see" how populations
+#' change from generation to generation. Work in progress.
+#' 
+#' 
+#' Thank you to Jan Engelstädter 
+#' for their BIOL3360 book https://bookdown.org/janengelstaedter/biol3360modelling3/discrete-time-models-in-one-variable.html
+#' which inspired some ideas within this model and teaching exercise.
+#' 
+#' And the Mastering Shiny book https://mastering-shiny.org/ for help with Shiny.
 #
 
 library(shiny)

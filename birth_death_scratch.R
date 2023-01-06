@@ -1,7 +1,7 @@
 starting_pop <- 1000
 
-birthrate <- 2.3/2
-deathrate <- 1
+birthrate <- 2
+deathrate <- 2.1
 
 generations <- 100
 
